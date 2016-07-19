@@ -22,7 +22,6 @@ var
   PORT = process.env.PORT || 3000,
   userRoutes = require('./routes/users.js')
 
-
   mongoose.connect('mongodb://localhost/project-4', function(err){
     if (err) return console.log(err);
     console.log("Connected to MongoDB (project-4)");
@@ -33,7 +32,7 @@ var
   app.use(express.static('./public'))
   app.use(logger('dev'))
   app.use(cookieParser())
-  app.use(bodyParser.urlencoded({extended: false}))
+  app.use(bodyParser.urlencoded({extended: true}))
   app.use(methodOverride(function(req, res){
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
 
@@ -63,34 +62,21 @@ app.use(function(req, res, next) {
   next()
 })
 
-app.get('/test-search', function(req, res) {
-  var apiUrl = 'https://api.edmunds.com/api/vehicle/v2/makes?fmt=json&api_key=' + process.env.API_KEY
-  request(apiUrl, function(err, response, body) {
-    res.json(JSON.parse(body))
-  })
-})
+// app.get('/test-search', function(req, res) {
+//   console.log(req);
+//   var apiUrl = 'https://api.edmunds.com/api/vehicle/v2/makes?fmt=json&api_key=' + process.env.API_KEY
+//   request(apiUrl, function(err, response, body) {
+//     res.json(JSON.parse(body))
+//   })
+// })
 
-app.post('/', function(req, res) {
-  var body = {
-    appKey: process.env.API_KEY,
-    query: req.body.query,
-    results: 5,
-    fields:["name", "make", "year"],
-    sort:{
-      field:"_score",
-      order:"desc"
-    },
-    filters:{
-      item_type:2
-    }
-  }
-  request({
-    method: 'POST',
-    json: true,
-    url: "http://api.edmunds.com/api/vehicle/v2/",
-    body: body
-  }, function(err, response, body){
+app.post('/test', function(req, res) {
+    console.log(req.body);
+    var apiUrl = 'http://api.edmunds.com/api/vehicle/v2/' + req.body.make + '/' + req.body.model + '/' + req.body.year + '/?fmt=json&api_key=' + process.env.API_KEY
+    console.log(apiUrl);
+    request(apiUrl, function(err, response, body){
     if (err) return console.log(err);
+    console.log(body);
     res.json(body)
   })
 })

@@ -1,0 +1,44 @@
+<div class="container">
+
+
+<div class="col-xs-6 col-xs-offset-3">
+    <form class="form-horizontal right-inner-addon" id="new-search" action="/" method="post">
+      <!-- <i class="icon-search"><span class="glyphicon glyphicon-search"></span></i> -->
+      <input  class="form-control input-lg" type="text" id="make" name="content" placeholder="Make" required>
+      <input  class="form-control input-lg" type="text" id="model" name="content" placeholder="Model" required>
+      <input  class="form-control input-lg" type="number" id="year" name="content" placeholder="Year" required>
+      <button class='btn btn-primary' type="submit" id="add-service">Submit</button>
+    </div>
+  </div>
+
+
+<script type="text/javascript">
+
+  $('#add-service').on('click', function(evt){
+  evt.preventDefault();
+  })
+
+
+
+  $('#add-service').on('click', function(){
+    var model = $('#model').val()
+    var make = $('#make').val()
+    var year = $('#year').val()
+    var carSearch = {}
+    carSearch.model = model;
+    carSearch.make = make;
+    carSearch.year = Number(year);
+
+    console.log(carSearch);
+    $.ajax({
+      url: '/test',
+      method: 'POST',
+      // contentType: 'application/json',
+      json: true,
+      data: carSearch
+    }).done(function(data){
+      console.log(data);
+    })
+  })
+
+</script>

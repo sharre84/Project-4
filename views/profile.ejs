@@ -1,0 +1,23 @@
+<div class="page-header text-center">
+    <h1><%= user.local.name %></h1>
+    <a href="/user/<%= user._id %>" class="btn btn-default btn-sm">Edit</a>
+    <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    <a href="/user/<%= user._id %>/delete" id="delete-account" class="btn btn-danger btn-sm">Delete Your Account</a>
+</div>
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <div class="well">
+      <h3>Profile</h3>
+      <% if (user.local.name) { %>
+        <p>
+          <strong>Name</strong>: <%= user.local.name %><br>
+          <strong>Email</strong>: <%= user.local.email %><br>
+        </p>
+      <% } else { %>
+        <p>
+          <strong>Name</strong>: <%= user.google.name %><br>
+          <strong>Email</strong>: <%= user.google.email %><br>
+        </p>
+      <% } %>
+
+    </div>
