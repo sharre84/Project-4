@@ -1,23 +1,88 @@
-<div class="page-header text-center">
-    <h1><%= user.local.name %></h1>
+<div class="container">
+  <h4 class="center-align">Choose your car:</h4>
+
+  <div class="row center-align">
+    <form class="col s12" id="new-search" action="/" method="post">
+      <div class="row">
+        <div class="input-field col s6 offset-s3">
+
+          <input type="text" id="make" name="content" placeholder="Make" required>
+          <input type="text" id="model" name="content" placeholder="Model" required>
+          <input type="number" id="year" name="content" placeholder="Year" required>
+          <button class='btn waves-effect waves-light' type="submit" id="add-service">Find<i class="material-icons right">send</i></button>
+        </div>
+      </div>
+    </div>
+    <div class="table-results">
+      <ul id="results" style="list-style: none"></ul>
+    </div>
+  </div>
+  <div class="profile center-align">
+    <p>
+    <strong>Name:</strong> <%= user.local.name %><br>
+    <strong>Email:</strong> <%= user.local.email %><br>
+    <strong>Vehicle:</strong> <%= user.car %><br>
+  </p>
     <a href="/user/<%= user._id %>" class="btn btn-default btn-sm">Edit</a>
     <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     <a href="/user/<%= user._id %>/delete" id="delete-account" class="btn btn-danger btn-sm">Delete Your Account</a>
-</div>
-<div class="row">
-  <div class="col-sm-6 col-sm-offset-3">
-    <div class="well">
-      <h3>Profile</h3>
-      <% if (user.local.name) { %>
-        <p>
-          <strong>Name</strong>: <%= user.local.name %><br>
-          <strong>Email</strong>: <%= user.local.email %><br>
-        </p>
-      <% } else { %>
-        <p>
-          <strong>Name</strong>: <%= user.google.name %><br>
-          <strong>Email</strong>: <%= user.google.email %><br>
-        </p>
-      <% } %>
+  </div>
 
-    </div>
+
+
+          <script type="text/javascript">
+
+          var resultsList = $('#results')
+
+          $('#add-service').on('click', function(evt){
+            evt.preventDefault();
+          })
+
+
+          $('#add-service').on('click', function(){
+            var model = $('#model').val()
+            var make = $('#make').val()
+            var year = $('#year').val()
+            var carSearch = {}
+            carSearch.model = model;
+            carSearch.make = make;
+            carSearch.year = Number(year);
+
+            console.log(carSearch);
+            $.ajax({
+              // url: '/user/<%= user._id %>/testcar',
+              url: '/findcar',
+              method: 'POST',
+              // contentType: 'application/json',
+              json: true,
+              data: carSearch
+            }).done(function(data){
+              resultsList.empty()
+              var carObject = JSON.parse(data)
+              var stylesArr = carObject.styles
+              for (var i = 0; i < stylesArr.length; i ++) {
+                console.log(stylesArr[i]);
+                resultsList.append('<li><a class="car-result">' + stylesArr[i].name + '</a></li>')
+
+              }
+              $('li').on('click', function(){
+                console.log($(this).text());
+                console.log('/user/<%= user._id %>/testcar')
+                var fullCar = make + ' ' + model + ' ' + $(this).text()
+                setCar(fullCar)
+              });
+            })
+          })
+
+          function setCar(car) {
+            $.ajax({
+              method: 'PATCH',
+              url: '/user/<%= user._id %>/setcar?car=' + car
+            }).done(function(data) {
+              console.log(data)
+              $('#user-car').text(data.user.car)
+              console.log(data.user);
+            })
+          }
+
+          </script>

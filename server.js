@@ -15,6 +15,8 @@ var
   passport = require('passport'),
   passportConfig = require('./config/passport.js'),
   methodOverride = require('method-override'),
+  User = require('./models/User.js')
+
 //   edmunds = require('edmunds')({
 //     appId: process.env.APPID,
 //     appKey: process.env.APPKEY
@@ -58,7 +60,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(function(req, res, next) {
-  res.locals.user = req.user
+  res.locals.user = req.user || null
   next()
 })
 
@@ -70,7 +72,20 @@ app.use(function(req, res, next) {
 //   })
 // })
 
-app.post('/test', function(req, res) {
+app.post('/user/:id/testcar', function(req, res){
+  console.log(req.body)
+  console.log(req.params.id);
+  User.findById(req.params.id, function(err, user){
+    if (err) {
+      console.log("error inside of testcar");
+      return console.log(err)
+    }
+    console.log("success inside of testcar");
+
+  })
+})
+
+app.post('/findcar', function(req, res) {
     console.log(req.body);
     var apiUrl = 'http://api.edmunds.com/api/vehicle/v2/' + req.body.make + '/' + req.body.model + '/' + req.body.year + '/?fmt=json&api_key=' + process.env.API_KEY
     console.log(apiUrl);

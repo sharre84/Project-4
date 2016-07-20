@@ -1,44 +1,84 @@
 <div class="container">
-
-
-<div class="col-xs-6 col-xs-offset-3">
-    <form class="form-horizontal right-inner-addon" id="new-search" action="/" method="post">
-      <!-- <i class="icon-search"><span class="glyphicon glyphicon-search"></span></i> -->
-      <input  class="form-control input-lg" type="text" id="make" name="content" placeholder="Make" required>
-      <input  class="form-control input-lg" type="text" id="model" name="content" placeholder="Model" required>
-      <input  class="form-control input-lg" type="number" id="year" name="content" placeholder="Year" required>
-      <button class='btn btn-primary' type="submit" id="add-service">Submit</button>
-    </div>
+  <h1 class="center-align">Add to your vehicle history</h1>
+  <div class="row">
+    <form action="/users/<%= user._id %>/maintlog" class="col s8 offset-s2" method="POST">
+      <div class="row">
+        <label>Type of service</label>
+        <input type="text" class="" name="what" id="what" required>
+      </div>
+      <div class="row">
+        <label>Date</label>
+        <input type="text" class="" name="when" id="date" required>
+      </div>
+      <div class="row">
+        <label>Price</label>
+        <input type="text" class="" name="price" id="price" required>
+      </div>
+      <button id="add-report" type="submit" class="btn waves-effect waves-light">Submit</button>
+    </form>
   </div>
+  <!--
+  <div class="table-service">
+  <ul id="service-results" class="collection">
+  <% user.maintenanceHistory.forEach(function(log) { %>
+  <li class="collection-item"><%= log.what %>, on <%= log.when %>, for <%= log.price %></li>
+  <% }) %>
+</ul>
+</div>
+</div> -->
 
 
-<script type="text/javascript">
+<table id="table-service" class="striped">
+  <thead>
+    <tr>
+      <th data-field="id">Type of service</th>
+      <th data-field="when">Date</th>
+      <th data-field="price">Price</th>
+    </tr>
+  </thead>
+  <tbody id='service-tbody'>
+  </tbody>
+</table>
 
-  $('#add-service').on('click', function(evt){
+<script>
+var serviceList = $('#service-results')
+var tableServiceBody = $('#table-service #service-tbody')
+
+$('#add-report').on('click', function(evt){
   evt.preventDefault();
-  })
+})
 
+$('#add-report').on('click', function(){
+  console.log("Clicked!")
+  var what = $('#what').val()
+  var when = $('#when').val()
+  var price = $('#price').val()
+  var carReport = {}
+  carReport.what = what;
+  carReport.when = when;
+  carReport.price = Number(price);
 
-
-  $('#add-service').on('click', function(){
-    var model = $('#model').val()
-    var make = $('#make').val()
-    var year = $('#year').val()
-    var carSearch = {}
-    carSearch.model = model;
-    carSearch.make = make;
-    carSearch.year = Number(year);
-
-    console.log(carSearch);
-    $.ajax({
-      url: '/test',
-      method: 'POST',
-      // contentType: 'application/json',
-      json: true,
-      data: carSearch
-    }).done(function(data){
-      console.log(data);
+  console.log(carReport);
+  $.ajax({
+    url: '/users/<%= user._id %>/maintlog',
+    method: 'POST',
+    json: true,
+    data: carReport
+  }).done(function(data){
+    serviceList.empty()
+    console.log(data);
+    data.maintenanceHistory.forEach(function(singleLog) {
+      tableServiceBody.append('<tr><td>' + singleLog.what + '</td><td>' + singleLog.when + '</td><td>' + singleLog.price + '</td></tr>')
     })
   })
+})
 
+$.ajax({
+  url: '/users/<%= user._id %>/maintlog',
+  method: 'GET'
+}).done(function(data){
+  data.maintenanceHistory.forEach(function(singleLog) {
+    tableServiceBody.append('<tr><td>' + singleLog.what + '</td><td>' + singleLog.when + '</td><td>' + singleLog.price + '</td></tr>')
+  })
+})
 </script>

@@ -3,10 +3,18 @@ var
   findOrCreate = require('mongoose-findorcreate'),
   bcrypt = require('bcrypt-nodejs'),
   Schema = mongoose.Schema,
-  carSchema = new Schema ({
-    make: String,
-    model: String,
-    year: Number,
+  // carSchema = new Schema ({
+  //   make: String,
+  //   model: String,
+  //   year: Number,
+  //   created_at: Date
+  // })
+
+  maintenanceSchema = new Schema ({
+    what: String,
+    when: String,
+    price: Number,
+    receipt: String,
     created_at: Date
   })
 
@@ -16,17 +24,19 @@ var
       email: String,
       password: String
     },
-    car: [carSchema]
+    car: String,
+    maintenanceHistory: [maintenanceSchema]
 })
 
 userSchema.plugin(findOrCreate)
-carSchema.pre('save', function(next){
-  if (!this.created_at) {
-    var current_date = new Date("June 29, 2016 11:13:00")
-    this.created_at = current_date
-  }
-  next()
-})
+
+// carSchema.pre('save', function(next){
+//   if (!this.created_at) {
+//     var current_date = new Date("June 29, 2016 11:13:00")
+//     this.created_at = current_date
+//   }
+//   next()
+// })
 
 userSchema.methods.generateHash = function(password){
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8))
