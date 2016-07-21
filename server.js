@@ -23,7 +23,7 @@ var
 
   mongoose.connect('mongodb://localhost/project-4', function(err){
     if (err) return console.log(err);
-    console.log("Connected to MongoDB (project-4)");
+    console.log("Connected to MongoDB (serviceBook)");
   })
 
   // middleware
@@ -78,7 +78,6 @@ app.post('/user/:id/testcar', function(req, res){
       return console.log(err)
     }
     console.log("success inside of testcar");
-
   })
 })
 
@@ -93,12 +92,12 @@ app.post('/findcar', function(req, res) {
   })
 })
 
+// root route
 app.get('/', function(req, res){
   console.log(req.user)
   res.render('landing.ejs', {flash: req.flash('loginMessage')})
 })
 
-//root route
 app.get('/user', function(req,res){
   res.render('index')
 })
@@ -111,7 +110,6 @@ app.listen(PORT, function(){
 
 
 // AMAZON S3
-
 var params;
 var S3_BUCKET = process.env.S3_BUCKET
 

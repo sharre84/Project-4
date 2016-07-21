@@ -2,8 +2,7 @@ var
   express = require('express'),
   passport = require('passport'),
   User = require('../models/User.js'),
-  userRouter = express.Router(),
-  date = new Date
+  userRouter = express.Router()
 
 
   userRouter.route('/users/:id/maintlog')
@@ -46,7 +45,6 @@ var
 
 
   userRouter.get('/profile', isLoggedIn, function(req, res){
-    console.log("Inside of profile");
     console.log(req.query);
     res.render('profile', {user: req.user, strategy: req.query.strategy})
   })
@@ -102,7 +100,7 @@ var
 })
 
   userRouter.get('/main', isLoggedIn, function(req, res){
-    res.render('main_page.ejs', {date: date})
+    res.render('main_page.ejs')
   })
 
   function isLoggedIn(req, res, next) {

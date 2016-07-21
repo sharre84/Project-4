@@ -1,33 +1,39 @@
 <div class="container">
+  <div class="row">
+    <div class="col s6">
+      <div class="profile">
+        <p class="profile-info">
+          <h2><%= user.local.name %></h5>
+          <h4><%= user.local.email %></h5>
+          <h4 id="usercar"><%= user.car %></h5>
+        </p>
+        <!-- <hr class="spaced"> -->
+        </div>
+        <div class="">
+        <a href="/user/<%= user._id %>" class="btn waves-effect waves-light">Edit Account</a>
+        <a href="/user/<%= user._id %>/delete" id="delete-account" class="btn waves-effect waves-light">Delete Your Account</a>
+        </div>
 
-  <div class="profile center-align">
-    <p class="profile-info">
-      <h5>Name: <%= user.local.name %></h5>
-      <h5>Email: <%= user.local.email %></h5>
-      <h5>Vehicle: <%= user.car %></h5>
-    </p>
-    <a href="/user/<%= user._id %>" class="btn waves-effect waves-light">Edit Account</a>
-    <a href="/user/<%= user._id %>/delete" id="delete-account" class="btn waves-effect waves-light">Delete Your Account</a>
+    </div>
+    <div class="col s6">
+      <h4>Choose your vehicle:</h4>
+
+      <form id="new-search" action="/" method="post">
+        <div class="row">
+          <div class="input-field">
+
+            <input type="text" id="make" name="content" placeholder="Make" required>
+            <input type="text" id="model" name="content" placeholder="Model" required>
+            <input type="number" id="year" name="content" placeholder="Year" required>
+            <button class='btn waves-effect waves-light' type="submit" id="add-service">Find<i class="material-icons right">send</i></button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 
-
-  <h4 class="center-align">Choose your vehicle:</h4>
-
-  <div class="row center-align">
-    <form class="col s12" id="new-search" action="/" method="post">
-      <div class="row">
-        <div class="input-field col s6 offset-s3">
-
-          <input type="text" id="make" name="content" placeholder="Make" required>
-          <input type="text" id="model" name="content" placeholder="Model" required>
-          <input type="number" id="year" name="content" placeholder="Year" required>
-          <button class='btn waves-effect waves-light' type="submit" id="add-service">Find<i class="material-icons right">send</i></button>
-        </div>
-      </div>
-    </form>
-    </div>
-    <div class="table-results">
-      <ul id="results" style="list-style: none"></ul>
+    <div class="table-results center-align">
+      <ul id="results" class="collection" style="list-style: none"></ul>
     </div>
   </div>
 
@@ -73,10 +79,10 @@
       var stylesArr = carObject.styles
       for (var i = 0; i < stylesArr.length; i ++) {
         console.log(stylesArr[i]);
-        resultsList.append('<li><a class="car-result">' + stylesArr[i].name + '</a></li>')
+        resultsList.append('<li class="collection-item"><a class="car-result">' + stylesArr[i].name + '</a></li>')
 
       }
-      $('li').on('click', function(){
+      $('.car-result').on('click', function(){
         console.log($(this).text());
         console.log('/user/<%= user._id %>/testcar')
         var fullCar = make + ' ' + model + ' ' + $(this).text()

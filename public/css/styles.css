@@ -3,7 +3,7 @@
 }
 
 #service-tbody img {
-  max-width:100px;
+  max-width:40px;
   cursor: pointer;
 }
 
@@ -12,21 +12,30 @@
 }
 
 .btn {
-  background-color: rgba(137, 143, 171, 1)
+  background-color: rgb(98, 91, 111);
 }
 
 #brand-logo {
-  max-width: 100px;
+  max-width: 130px;
+  padding-top: 5px;
 }
 
 body {
-  background-color: rgba(54, 190, 244, 0.19)
+  /*background-color: #DCDDD8;*/
+  font-family: 'Titillium Web', sans-serif;
+  background-image: url("/images/crossword.png");
+  color: rgb(98, 91, 111);
 }
 
 #delete-account {
   background-color: rgba(255, 0, 0, 0.38)
 }
 
-h5 {
-  font-size: 14px;
+.spaced {
+  margin: 40px 0;
+}
+
+div#login-modal {
+    border-radius: 10px;
+    background-image: url("/images/crossword.png");
 }
