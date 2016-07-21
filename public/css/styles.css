@@ -6,3 +6,27 @@
   max-width:100px;
   cursor: pointer;
 }
+
+#front-image {
+  max-width: 600px;
+}
+
+.btn {
+  background-color: rgba(137, 143, 171, 1)
+}
+
+#brand-logo {
+  max-width: 100px;
+}
+
+body {
+  background-color: rgba(54, 190, 244, 0.19)
+}
+
+#delete-account {
+  background-color: rgba(255, 0, 0, 0.38)
+}
+
+h5 {
+  font-size: 14px;
+}

@@ -1,13 +1,12 @@
 <div class="container">
 
   <div class="profile center-align">
-    <p>
-      <strong>Name:</strong> <%= user.local.name %><br>
-      <strong>Email:</strong> <%= user.local.email %><br>
-      <strong>Vehicle:</strong> <%= user.car %><br>
+    <p class="profile-info">
+      <h5>Name: <%= user.local.name %></h5>
+      <h5>Email: <%= user.local.email %></h5>
+      <h5>Vehicle: <%= user.car %></h5>
     </p>
-    <a href="/user/<%= user._id %>" class="btn waves-effect waves-light">Edit</a>
-    <a href="/logout" class="btn waves-effect waves-light">Logout</a>
+    <a href="/user/<%= user._id %>" class="btn waves-effect waves-light">Edit Account</a>
     <a href="/user/<%= user._id %>/delete" id="delete-account" class="btn waves-effect waves-light">Delete Your Account</a>
   </div>
 
@@ -25,6 +24,7 @@
           <button class='btn waves-effect waves-light' type="submit" id="add-service">Find<i class="material-icons right">send</i></button>
         </div>
       </div>
+    </form>
     </div>
     <div class="table-results">
       <ul id="results" style="list-style: none"></ul>

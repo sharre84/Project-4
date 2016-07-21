@@ -32,7 +32,8 @@
 
 
 <nav>
-  <div class="nav-wrapper">
+  <div class="nav-wrapper" style="background-color:rgba(3, 186, 244, 0.43)">
+    <a href="/main" class="brand-logo"><img src="/images/logo_trans.png" id="brand-logo"></a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <% if (!user) { %>
         <li class="dropdown">
@@ -60,12 +61,12 @@
           </ul>
         </li>
         <% } else { %>
-          <li><a href='/main'>Add</a></li>
+          <li><a href='/main'><i class="material-icons" title="Add to serice history">system_update_alt</i></a></li>
           <% if (user.local.name ) { %>
-            <li><a href='/profile' id="usercar"><%= user.car %></a></li>
+            <li><a href='/profile' id="usercar"><i class="material-icons" title="Profile page">perm_identity</i></a></li>
             <% } else { %>
               <% } %>
-              <li><a href='/logout'>Logout</a></li>
+              <li><a href='/logout'><i class="material-icons" title="Logout">power_settings_new</i></a></li>
               <% } %>
             </ul>
           </div>

@@ -11,23 +11,38 @@
       <div class="row">
         <input type="text" name="price" id="price" placeholder="Price" required>
       </div>
-      <div class="row">
+      <div class="file-field input-field">
+        <div class="btn">
+          <span>File</span>
+        </div>
+        <div class="file-path-wrapper">
+       <input class="file-path validate" type="text" placeholder="Upload your receipt">
+     </div>
         <input type="file" id="file-input" placeholder="Upload Receipt" name="file">
         <input type="hidden" id="image-file" name="receipt">
       </div>
       <button id="add-report" type="submit" class="btn waves-effect waves-light">Submit</button>
     </form>
   </div>
-  <!-- <img style="max-width:200px" src="" id="receipt-thumb"> -->
-  <!--
-  <div class="table-service">
-  <ul id="service-results" class="collection">
-  <% user.maintenanceHistory.forEach(function(log) { %>
-  <li class="collection-item"><%= log.what %>, on <%= log.when %>, for <%= log.price %></li>
-  <% }) %>
-</ul>
-</div>
-</div> -->
+<!--
+
+
+
+  <form action="#">
+      <div class="file-field input-field">
+        <div class="btn">
+          <span>File</span>
+          <input type="file">
+        </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text">
+        </div>
+      </div>
+    </form> -->
+
+
+
+
 
 
 <table id="table-service" class="striped">
