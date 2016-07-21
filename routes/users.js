@@ -8,8 +8,8 @@ var
 
   userRouter.route('/users/:id/maintlog')
 	.post(function(req, res){
-    console.log("back end req.body!",req.body);
     User.findOne({_id: req.params.id}, function(err, user){
+      console.log(req.body)
       console.log('user', user)
       if(err) return console.log(err)
       user.maintenanceHistory.push(req.body)
@@ -85,6 +85,21 @@ var
     req.logout()
     res.redirect('/')
   })
+
+  userRouter.route('/users/:id/maintlog/:serviceId')
+  .delete(function(req, res){
+  User.findById(req.params.id, function(err, user){
+    if (err) return console.log(err);
+    if (user.maintenanceHistory.id(req.params.serviceId)) {
+      var item = user.maintenanceHistory.id(req.params.serviceId);
+      item.remove()
+      user.save(function(err){
+        if (err) return console.log(err);
+      })
+      res.json({message: 'deleted item successfully', user: user})
+    }
+  })
+})
 
   userRouter.get('/main', isLoggedIn, function(req, res){
     res.render('main_page.ejs', {date: date})

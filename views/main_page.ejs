@@ -1,22 +1,24 @@
 <div class="container">
-  <h1 class="center-align">Add to your vehicle history</h1>
+  <h1 class="center-align">Add to your service history</h1>
   <div class="row">
-    <form action="/users/<%= user._id %>/maintlog" class="col s8 offset-s2" method="POST">
+    <form action="/users/<%= user._id %>/maintlog" class="col s8 offset-s2" method="POST" id='form'>
       <div class="row">
-        <label>Type of service</label>
-        <input type="text" class="" name="what" id="what" required>
+        <input type="text" name="what" id="what" placeholder="Type of service" required>
       </div>
       <div class="row">
-        <label>Date</label>
-        <input type="text" class="" name="when" id="date" required>
+        <input type="text" name="when" id="when" placeholder="Date" required>
       </div>
       <div class="row">
-        <label>Price</label>
-        <input type="text" class="" name="price" id="price" required>
+        <input type="text" name="price" id="price" placeholder="Price" required>
+      </div>
+      <div class="row">
+        <input type="file" id="file-input" placeholder="Upload Receipt" name="file">
+        <input type="hidden" id="image-file" name="receipt">
       </div>
       <button id="add-report" type="submit" class="btn waves-effect waves-light">Submit</button>
     </form>
   </div>
+  <!-- <img style="max-width:200px" src="" id="receipt-thumb"> -->
   <!--
   <div class="table-service">
   <ul id="service-results" class="collection">
@@ -33,6 +35,7 @@
     <tr>
       <th data-field="id">Type of service</th>
       <th data-field="when">Date</th>
+      <th data-field="receipt">Receipt</th>
       <th data-field="price">Price</th>
     </tr>
   </thead>
@@ -40,23 +43,41 @@
   </tbody>
 </table>
 
+
+
+<!-- Modal Structure -->
+  <div id="receipt-modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <img style="width:100%;" id="large-receipt" src="">
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+    </div>
+  </div>
+
+
+
+
 <script>
 var serviceList = $('#service-results')
-var tableServiceBody = $('#table-service #service-tbody')
+var tableServiceBody = $('#service-tbody')
 
 $('#add-report').on('click', function(evt){
   evt.preventDefault();
 })
 
 $('#add-report').on('click', function(){
-  console.log("Clicked!")
   var what = $('#what').val()
   var when = $('#when').val()
   var price = $('#price').val()
+  var receipt = $('#image-file').val()
   var carReport = {}
   carReport.what = what;
   carReport.when = when;
   carReport.price = Number(price);
+  carReport.receipt = receipt;
+
+  $('#form')[0].reset()
 
   console.log(carReport);
   $.ajax({
@@ -67,9 +88,8 @@ $('#add-report').on('click', function(){
   }).done(function(data){
     serviceList.empty()
     console.log(data);
-    data.maintenanceHistory.forEach(function(singleLog) {
-      tableServiceBody.append('<tr><td>' + singleLog.what + '</td><td>' + singleLog.when + '</td><td>' + singleLog.price + '</td></tr>')
-    })
+    var singleLog = data.maintenanceHistory[data.maintenanceHistory.length - 1]
+    tableServiceBody.append('<tr id="' + singleLog._id + '"><td><button class="delete btn waves-effect waves-light">Remove</button> ' + singleLog.what + '</td><td>' + singleLog.when + '</td><td><a href="#modal1"><img src="' + singleLog.receipt + '"></a></td><td>' + singleLog.price + '</td></tr>')
   })
 })
 
@@ -78,7 +98,97 @@ $.ajax({
   method: 'GET'
 }).done(function(data){
   data.maintenanceHistory.forEach(function(singleLog) {
-    tableServiceBody.append('<tr><td>' + singleLog.what + '</td><td>' + singleLog.when + '</td><td>' + singleLog.price + '</td></tr>')
+    tableServiceBody.append('<tr id="' + singleLog._id + '"><td><button class="delete btn waves-effect waves-light">Remove</button> ' + singleLog.what + '</td><td>' + singleLog.when + '</td><td><a href="#modal1"><img src="' + singleLog.receipt + '"></a></td><td>' + singleLog.price + '</td></tr>')
   })
 })
+
+// DELETE SERVICE HISTORY
+$('body').on('click', '.delete', function(){
+        var btn = $(this)
+        var serviceId = btn.parent().parent().attr('id')
+        $.ajax({
+          url: '/users/<%= user._id %>/maintlog/' + serviceId,
+          method: "DELETE",
+        }).done(function(data){
+          btn.parent().parent().slideUp(function(){
+            btn.parent().parent().remove();
+          })
+        })
+      })
+
+$('body').on('click', '#service-tbody img', function(evt) {
+  evt.preventDefault()
+  // console.log($(this).attr('src'))
+  $('#large-receipt').attr('src', $(this).attr('src'))
+  $('#receipt-modal').openModal();
+})
+
+
+
+
+
+// AMAZON S3
+function uploadFile(file, signedRequest, url){
+  const xhr = new XMLHttpRequest();
+  xhr.open('PUT', signedRequest);
+
+
+  // the below code runs once a file has been added to the input field
+  xhr.onreadystatechange = () => {
+
+    if(xhr.readyState === 4){
+      if(xhr.status === 200){
+        console.log("Image URL:")
+        console.log(url)
+
+        document.getElementById('image-file').value = url;
+        $('#receipt-thumb').attr('src', url)
+
+      }
+      else{
+        alert('Could not upload file.');
+      }
+    }
+  };
+  xhr.send(file);
+}
+
+function getSignedRequest(file){
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+  xhr.onreadystatechange = () => {
+    if(xhr.readyState === 4){
+      if(xhr.status === 200){
+        const response = JSON.parse(xhr.responseText);
+        console.log(xhr.responseText);
+        uploadFile(file, response.signedRequest, response.url);
+      }
+      else{
+        alert('Could not get signed URL.');
+      }
+    }
+  };
+  xhr.send();
+}
+
+/*
+Function called when file input updated. If there is a file selected, then
+start upload procedure by asking for a signed request from the app.
+*/
+function initUpload(){
+  const files = document.getElementById('file-input').files;
+  const file = files[0];
+  if(file == null){
+    return alert('No file selected.');
+  }
+  getSignedRequest(file);
+}
+
+/*
+Bind listeners when the page loads.
+*/
+(() => {
+  document.getElementById('file-input').onchange = initUpload;
+})();
+
 </script>

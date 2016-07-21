@@ -15,12 +15,9 @@ var
   passport = require('passport'),
   passportConfig = require('./config/passport.js'),
   methodOverride = require('method-override'),
-  User = require('./models/User.js')
+  User = require('./models/User.js'),
+  aws = require('aws-sdk')
 
-//   edmunds = require('edmunds')({
-//     appId: process.env.APPID,
-//     appKey: process.env.APPKEY
-// },    false),
   PORT = process.env.PORT || 3000,
   userRoutes = require('./routes/users.js')
 
@@ -110,4 +107,42 @@ app.use('/', userRoutes)
 
 app.listen(PORT, function(){
   console.log('Server is running on port: ', PORT);
+})
+
+
+// AMAZON S3
+
+var params;
+var S3_BUCKET = process.env.S3_BUCKET
+
+app.get('/sign-s3', function(req, res) {
+ var
+   s3 = new aws.S3(),
+   fileName = req.query['file-name'],
+   fileType = req.query['file-type'],
+   s3Params = {
+     Bucket: S3_BUCKET,
+     Key: fileName,
+     Expires: 60,
+     ContentType: fileType,
+     ACL: 'public-read'
+   }
+
+   params = {
+     Bucket: S3_BUCKET,
+     Key: fileName
+   }
+
+ s3.getSignedUrl('putObject', s3Params, function(err, data) {
+   if(err){
+     console.log(err)
+     return res.end()
+   }
+   var returnData = {
+     signedRequest: data,
+     url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + fileName
+   }
+   res.write(JSON.stringify(returnData));
+   res.end();
+ })
 })
