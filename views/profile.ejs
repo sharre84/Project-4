@@ -88,6 +88,9 @@
         var fullCar = make + ' ' + model + ' ' + $(this).text()
         setCar(fullCar)
         resultsList.empty()
+        $('#model').val("")
+        $('#make').val("")
+        $('#year').val("")
       });
     })
   })

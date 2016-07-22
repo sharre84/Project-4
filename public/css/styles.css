@@ -24,6 +24,7 @@ body {
   font-family: 'Titillium Web', sans-serif;
   background-image: url("/images/crossword.png");
   color: rgb(98, 91, 111);
+  padding-bottom: 30px;
 }
 
 #delete-account {
