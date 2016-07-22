@@ -21,7 +21,8 @@ var
   PORT = process.env.PORT || 3000,
   userRoutes = require('./routes/users.js')
 
-  mongoose.connect('mongodb://localhost/project-4', function(err){
+  // mongoose.connect('mongodb://localhost/project-4', function(err){
+  mongoose.connect(process.env.MONGODB, function(err){
     if (err) return console.log(err);
     console.log("Connected to MongoDB (serviceBook)");
   })
