@@ -7,7 +7,7 @@ Never forget when your last oil change was again, with serviceBook, you can keep
 
 ### Installation
 
-No installation required, click [here](https://honest-eds-21969.herokuapp.com) to acccess the site and get started!
+No installation required, click [here](https://stark-tundra-50325.herokuapp.com/) to acccess the site and get started!
 
 ### Project Requirements
 
