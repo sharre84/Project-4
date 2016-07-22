@@ -8,7 +8,7 @@
 }
 
 #front-image {
-  max-width: 600px;
+  max-width: 300px;
 }
 
 .btn {
@@ -21,14 +21,13 @@
 }
 
 body {
-  /*background-color: #DCDDD8;*/
   font-family: 'Titillium Web', sans-serif;
   background-image: url("/images/crossword.png");
   color: rgb(98, 91, 111);
 }
 
 #delete-account {
-  background-color: rgba(255, 0, 0, 0.38)
+  background-color: rgba(255, 0, 0, 0.38);
 }
 
 .spaced {
@@ -39,3 +38,6 @@ div#login-modal {
     border-radius: 10px;
     background-image: url("/images/crossword.png");
 }
+ .custom-nav {
+   background-color:rgb(98, 91, 111);
+ }

@@ -47,100 +47,91 @@ var
   app.use(flash())
 
   app.use(session({
-  cookie: {maxTime: 60000000},
-  secret: "seeecret",
-  resave: true,
-  saveUninitialized: false
-}))
+    cookie: {maxTime: 60000000},
+    secret: "seeecret",
+    resave: true,
+    saveUninitialized: false
+  }))
 
-app.use(passport.initialize())
-app.use(passport.session())
+  app.use(passport.initialize())
+  app.use(passport.session())
 
-app.use(function(req, res, next) {
-  res.locals.user = req.user || null
-  next()
-})
-
-// app.get('/test-search', function(req, res) {
-//   console.log(req);
-//   var apiUrl = 'https://api.edmunds.com/api/vehicle/v2/makes?fmt=json&api_key=' + process.env.API_KEY
-//   request(apiUrl, function(err, response, body) {
-//     res.json(JSON.parse(body))
-//   })
-// })
-
-app.post('/user/:id/testcar', function(req, res){
-  console.log(req.body)
-  console.log(req.params.id);
-  User.findById(req.params.id, function(err, user){
-    if (err) {
-      console.log("error inside of testcar");
-      return console.log(err)
-    }
-    console.log("success inside of testcar");
+  app.use(function(req, res, next) {
+    res.locals.user = req.user || null
+    next()
   })
-})
 
-app.post('/findcar', function(req, res) {
+  app.post('/user/:id/testcar', function(req, res){
+    console.log(req.body)
+    console.log(req.params.id);
+    User.findById(req.params.id, function(err, user){
+      if (err) {
+        console.log("error inside of testcar");
+        return console.log(err)
+      }
+      console.log("success inside of testcar");
+    })
+  })
+
+  app.post('/findcar', function(req, res) {
     console.log(req.body);
     var apiUrl = 'http://api.edmunds.com/api/vehicle/v2/' + req.body.make + '/' + req.body.model + '/' + req.body.year + '/?fmt=json&api_key=' + process.env.API_KEY
     console.log(apiUrl);
     request(apiUrl, function(err, response, body){
-    if (err) return console.log(err);
-    console.log(body);
-    res.json(body)
+      if (err) return console.log(err);
+      console.log(body);
+      res.json(body)
+    })
   })
-})
 
-// root route
-app.get('/', function(req, res){
-  console.log(req.user)
-  res.render('landing.ejs', {flash: req.flash('loginMessage')})
-})
+  // root route
+  app.get('/', function(req, res){
+    console.log(req.user)
+    res.render('landing.ejs', {flash: req.flash('loginMessage')})
+  })
 
-app.get('/user', function(req,res){
-  res.render('index')
-})
+  app.get('/user', function(req,res){
+    res.render('index')
+  })
 
-app.use('/', userRoutes)
+  app.use('/', userRoutes)
 
-app.listen(PORT, function(){
-  console.log('Server is running on port: ', PORT);
-})
+  app.listen(PORT, function(){
+    console.log('Server is running on port: ', PORT);
+  })
 
+  // AMAZON S3
+  var params;
+  var S3_BUCKET = process.env.S3_BUCKET
 
-// AMAZON S3
-var params;
-var S3_BUCKET = process.env.S3_BUCKET
+  app.get('/sign-s3', function(req, res) {
+    var
+    s3 = new aws.S3(),
+    fileName = req.query['file-name'],
+    fileType = req.query['file-type'],
+    s3Params = {
+      Bucket: S3_BUCKET,
+      Key: fileName,
+      Expires: 60,
+      ContentType: fileType,
+      ACL: 'public-read'
+    }
 
-app.get('/sign-s3', function(req, res) {
- var
-   s3 = new aws.S3(),
-   fileName = req.query['file-name'],
-   fileType = req.query['file-type'],
-   s3Params = {
-     Bucket: S3_BUCKET,
-     Key: fileName,
-     Expires: 60,
-     ContentType: fileType,
-     ACL: 'public-read'
-   }
+    params = {
+      Bucket: S3_BUCKET,
+      Key: fileName
+    }
 
-   params = {
-     Bucket: S3_BUCKET,
-     Key: fileName
-   }
-
- s3.getSignedUrl('putObject', s3Params, function(err, data) {
-   if(err){
-     console.log(err)
-     return res.end()
-   }
-   var returnData = {
-     signedRequest: data,
-     url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + fileName
-   }
-   res.write(JSON.stringify(returnData));
-   res.end();
- })
-})
+    s3.getSignedUrl('putObject', s3Params, function(err, data) {
+      if(err){
+        console.log(err)
+        return res.end()
+      }
+      var returnData = {
+        signedRequest: data,
+        url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + fileName
+      }
+      res.write(JSON.stringify(returnData));
+      res.end();
+    })
+  })

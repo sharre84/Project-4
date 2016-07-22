@@ -1,20 +1,20 @@
 <nav>
-  <div class="nav-wrapper " style="background-color:rgb(98, 91, 111)">
+  <div class="nav-wrapper custom-nav">
     <a href="/main" class="brand-logo"><img src="/images/navlogo.gif" id="brand-logo"></a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <% if (!user) { %>
-        <li><a href="#!" id="nav-login">Login</a></li>
-        <% } else { %>
-          <li><a href='/main'><i class="material-icons" style="color: #FFFCEC" title="Add to service history">system_update_alt</i></a></li>
-          <% if (user.local.name ) { %>
-            <li><a href='/profile' ><i class="material-icons" style="color: #FFFCEC" title="Profile page">perm_identity</i></a></li>
-            <% } else { %>
-              <% } %>
-              <li><a href='/logout'><i class="material-icons" style="color: rgba(255, 0, 0, 0.52)" title="Logout">power_settings_new</i></a></li>
-              <% } %>
-            </ul>
-          </div>
-        </nav>
+      <li><a href="#!" id="nav-login">Login</a></li>
+      <% } else { %>
+      <li><a href='/main'><i class="material-icons" style="color: #FFFCEC" title="Add to service history">system_update_alt</i></a></li>
+      <% if (user.local.name ) { %>
+      <li><a href='/profile' ><i class="material-icons" style="color: #FFFCEC" title="Profile page">perm_identity</i></a></li>
+      <% } else { %>
+        <% } %>
+        <li><a href='/logout'><i class="material-icons" style="color: rgba(255, 0, 0, 0.52)" title="Logout">power_settings_new</i></a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
 
 
 <!-- Modal Structure -->

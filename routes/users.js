@@ -4,9 +4,8 @@ var
   User = require('../models/User.js'),
   userRouter = express.Router()
 
-
   userRouter.route('/users/:id/maintlog')
-	.post(function(req, res){
+  .post(function(req, res){
     User.findOne({_id: req.params.id}, function(err, user){
       console.log(req.body)
       console.log('user', user)
@@ -18,19 +17,20 @@ var
       })
     })
   })
+
   .get(function(req, res){
     User.findOne({_id: req.params.id}, function(err, user){
       if(err) return console.log(err)
       res.json(user)
+    })
   })
-})
 
   userRouter.route('/login')
   .get(function(req, res){
     res.render('login', {flash: req.flash('loginMessage')})
   })
   .post(passport.authenticate('local-login',{
-    successRedirect: '/main',
+    successRedirect: '/profile',
     failureRedirect: '/login'
   }))
 
@@ -42,7 +42,6 @@ var
     successRedirect: '/main',
     failureRedirect: '/signup'
   }))
-
 
   userRouter.get('/profile', isLoggedIn, function(req, res){
     console.log(req.query);
@@ -86,26 +85,26 @@ var
 
   userRouter.route('/users/:id/maintlog/:serviceId')
   .delete(function(req, res){
-  User.findById(req.params.id, function(err, user){
-    if (err) return console.log(err);
-    if (user.maintenanceHistory.id(req.params.serviceId)) {
-      var item = user.maintenanceHistory.id(req.params.serviceId);
-      item.remove()
-      user.save(function(err){
-        if (err) return console.log(err);
-      })
-      res.json({message: 'deleted item successfully', user: user})
-    }
+    User.findById(req.params.id, function(err, user){
+      if (err) return console.log(err);
+      if (user.maintenanceHistory.id(req.params.serviceId)) {
+        var item = user.maintenanceHistory.id(req.params.serviceId);
+        item.remove()
+        user.save(function(err){
+          if (err) return console.log(err);
+        })
+        res.json({message: 'deleted item successfully', user: user})
+      }
+    })
   })
-})
 
   userRouter.get('/main', isLoggedIn, function(req, res){
     res.render('main_page.ejs')
   })
 
   function isLoggedIn(req, res, next) {
-  if(req.isAuthenticated()) return next()
-  res.redirect('/')
+    if(req.isAuthenticated()) return next()
+    res.redirect('/')
   }
 
-module.exports = userRouter
+  module.exports = userRouter
